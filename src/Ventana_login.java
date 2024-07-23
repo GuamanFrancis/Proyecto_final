@@ -12,7 +12,7 @@ public class Ventana_login extends JFrame{
     private JButton olvidasteTuContraseñaButton;
 
 
-    public Ventana_login() {
+    public Ventana_login(String rol) {
         super("hola");
         setContentPane(panellogin);
 
@@ -22,7 +22,7 @@ public class Ventana_login extends JFrame{
             public void actionPerformed(ActionEvent e) {
 
                 try {
-                    validardatos();
+                    validardatos(rol);
                 }catch (SQLException ex){
                     System.out.println(ex.getMessage());
 
@@ -46,19 +46,23 @@ public class Ventana_login extends JFrame{
 
     }
 
-    public void validardatos()throws SQLException{
+    public void validardatos(String rol)throws SQLException{
         Connection conectar = conexion();
+
+        String sql="";
+        if ("Administradores".equalsIgnoreCase(rol)) {
+             sql = "SELECT * FROM Administradores WHERE username = ? AND password = ?";
+
+        } else if ("Cajeros".equalsIgnoreCase(rol)) {
+             sql = "SELECT * FROM Cajeros WHERE username = ? AND password = ?";
+        }
         String usuario = Userid.getText();
         String password = pass.getText();
-
-        String sql = "SELECT * FROM Administradores WHERE username = ? AND password =?";
-
+        String usuarios;
         PreparedStatement stmt = conectar.prepareStatement(sql);
         stmt.setString(1,usuario);
         stmt.setString(2,password);
-
         ResultSet rs = stmt.executeQuery();
-
         if (rs.next()){
             Ventana_menu menu = new Ventana_menu();
             menu.ingresar();
@@ -67,6 +71,7 @@ public class Ventana_login extends JFrame{
             JOptionPane.showMessageDialog(null,"Nombre de usuario o contraseña  incorrecto");
         }
     }
+
 
 
 
