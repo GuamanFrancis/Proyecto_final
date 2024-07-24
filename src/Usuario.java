@@ -30,20 +30,10 @@ public class Usuario extends JFrame{
                 Ventana_login login = new Ventana_login(Usuariodeingreso);
                 login.ingresar();
                 dispose();
-
-
-
             }
         });
     }
-    public Connection conexion()throws SQLException {
-        String url = "jdbc:mysql://uingjeu1gmkd2ikl:ngOGTn2MktXQ8MflMQUd@bvaoxw2wxsng8gwobpyh-mysql.services.clever-cloud.com:3306/bvaoxw2wxsng8gwobpyh";
-        String user = "uingjeu1gmkd2ikl";
-        String pass = "ngOGTn2MktXQ8MflMQUd";
 
-        return DriverManager.getConnection(url,user,pass);
-
-    }
     public void ingresar(){
         setVisible(true);
         setSize(400,500);

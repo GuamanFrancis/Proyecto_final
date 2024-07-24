@@ -64,7 +64,7 @@ public class Ventana_login extends JFrame{
         stmt.setString(2,password);
         ResultSet rs = stmt.executeQuery();
         if (rs.next()){
-            Ventana_menu menu = new Ventana_menu();
+            Ventana_menu_administrador menu = new Ventana_menu_administrador();
             menu.ingresar();
             dispose();
         }else{
