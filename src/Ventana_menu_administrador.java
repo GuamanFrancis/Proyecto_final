@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -27,6 +28,25 @@ public class Ventana_menu_administrador extends JFrame{
             }
         });
 
+        button2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Ventana_Busqueda busqueda = new Ventana_Busqueda();
+               busqueda.ingresar();
+                dispose();
+
+            }
+        });
+        button4.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                Ventana_Eliminar eliminar = new Ventana_Eliminar();
+                eliminar.ingresar();
+                dispose();
+
+            }
+        });
     }
     public void ingresar(){
         setVisible(true);
@@ -35,5 +55,10 @@ public class Ventana_menu_administrador extends JFrame{
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     }
+
+
+
+
+
 
 }

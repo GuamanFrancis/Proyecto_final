@@ -5,7 +5,5 @@
         Usuario nuevo = new Usuario();
         nuevo.ingresar();
 
-
-
     }
 }

@@ -13,14 +13,16 @@ public class Ventana_login extends JFrame{
 
 
     public Ventana_login(String rol) {
+
         super("hola");
         setContentPane(panellogin);
+
+
 
 
         ingresarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
                 try {
                     validardatos(rol);
                 }catch (SQLException ex){
@@ -74,5 +76,5 @@ public class Ventana_login extends JFrame{
 
 
 
-
 }
+
