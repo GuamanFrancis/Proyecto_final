@@ -8,11 +8,13 @@ public class Usuario extends JFrame{
     private JButton cajero;
     private JPanel usuarioo;
     private JLabel logousuario;
+    private JPanel panelimagen;
+    private JLabel imagen;
 
     public Usuario() {
         super("Ventana Usuario");
         setContentPane(usuarioo);
-        Image imagen= new ImageIcon("./src/usuariotransparente.png").getImage();
+        Image imagen= new ImageIcon("./src/png-transparent-light-circle-geometry-science-and-technology-blue-mechanical-blue-angle-electronics.png").getImage();
         ImageIcon img1=new ImageIcon(imagen.getScaledInstance(100, 100, Image.SCALE_SMOOTH));
         logousuario.setIcon(img1);
 
@@ -73,18 +75,23 @@ public class Usuario extends JFrame{
 
         logousuario = new JLabel("");
         logousuario.setForeground(Color.WHITE); // Color del texto
-        logousuario.setBackground(new Color(0, 120, 215, 2)); // Color de fondo (necesita setOpaque(true))
+        logousuario.setBackground(new Color(0, 215, 165, 2)); // Color de fondo (necesita setOpaque(true))
         logousuario.setOpaque(false); // Hace que el color de fondo sea visible
         logousuario.setPreferredSize(new Dimension(150, 40)); // Tamaño preferido del JLabel
         logousuario.setHorizontalAlignment(SwingConstants.CENTER); // Alineación horizontal del texto
         logousuario.setVerticalAlignment(SwingConstants.CENTER);
         usuarioo = new JPanel();
-        usuarioo = new CustomPanel("./src/dark-black-and-gray-blurred-gradient-background-has-a-little-abstract-light-soft-background-for-wallpaper-design-graphic-and-presentation-backdrop-wall-free-photo.png"); // Reemplaza con la ruta a tu imagen
+        usuarioo = new CustomPanel("./src/fondo azul.png"); // Reemplaza con la ruta a tu imagen
         usuarioo.setLayout(new FlowLayout(FlowLayout.LEFT));
         usuarioo.setBackground(Color.black); // Cambia el color de fondo
         //usuarioo.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2)); // Añade un borde
         usuarioo.getGraphics();
-
+        panelimagen = new JPanel();
+        panelimagen = new CustomPanel("./src/png-transparent-round-blue-illustration-decorative-circle-of-science-and-technology-blue-angle-text.png");
+        logousuario.setBackground(new Color(0, 215, 165, 2));
+        panelimagen.setOpaque(true);
+        panelimagen.setPreferredSize(new Dimension(150, 40));
+        imagen = new JLabel();
 
 
 

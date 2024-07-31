@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
@@ -7,6 +8,7 @@ public class Ventana_Eliminar extends JFrame{
     private JTextField eliminar;
     private JButton eliminarButton;
     private JPanel paneleliminar;
+    private JButton volver;
 
     public Ventana_Eliminar() {
         super("Panel de Busqueda");
@@ -26,6 +28,16 @@ public class Ventana_Eliminar extends JFrame{
 
             }
         });
+        volver.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Ventana_menu_administrador menu = new Ventana_menu_administrador();
+                menu.ingresar();
+                dispose();
+
+            }
+        });
+
     }
 
     public void ingresar(){
@@ -84,5 +96,15 @@ public class Ventana_Eliminar extends JFrame{
         }
 
 
+    }
+
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
+        volver = new JButton();
+        volver.setFont(new Font("Arial", Font.BOLD, 16));
+        volver.setForeground(Color.WHITE);
+        volver.setBackground(Color.getHSBColor(144,151,0));
+        volver.setBorderPainted(true);
+        volver.setCursor(new Cursor(Cursor.HAND_CURSOR));
     }
 }

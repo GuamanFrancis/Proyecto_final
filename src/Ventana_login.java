@@ -66,9 +66,18 @@ public class Ventana_login extends JFrame{
         stmt.setString(2,password);
         ResultSet rs = stmt.executeQuery();
         if (rs.next()){
-            Ventana_menu_administrador menu = new Ventana_menu_administrador();
-            menu.ingresar();
-            dispose();
+
+            if ("Administradores".equalsIgnoreCase(rol)) {
+                Ventana_menu_administrador menu = new Ventana_menu_administrador();
+                menu.ingresar();
+                dispose();
+
+            } else if ("Cajeros".equalsIgnoreCase(rol)) {
+                Ventana_menu_cajero cajero = new Ventana_menu_cajero();
+                cajero.ingresar();
+                dispose();
+            }
+
         }else{
             JOptionPane.showMessageDialog(null,"Nombre de usuario o contraseña  incorrecto");
         }

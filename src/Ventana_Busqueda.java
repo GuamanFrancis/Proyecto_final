@@ -13,6 +13,7 @@ public class Ventana_Busqueda extends JFrame{
     private JLabel imgepn;
     private JPanel panelprincipa;
     private JTextField busqueda;
+    private JButton volver;
 
     public Ventana_Busqueda() {
         super("Ventana Busqueda");
@@ -38,6 +39,14 @@ public class Ventana_Busqueda extends JFrame{
 
             }
         });
+        volver.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Ventana_menu_administrador menu = new Ventana_menu_administrador();
+                menu.ingresar();
+                dispose();
+            }
+        });
     }
 
     public void ingresar(){
@@ -49,6 +58,21 @@ public class Ventana_Busqueda extends JFrame{
 
     }
 
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
+        volver = new JButton();
+        volver.setFont(new Font("Arial", Font.BOLD, 16));
+        volver.setForeground(Color.WHITE);
+        volver.setBackground(Color.getHSBColor(144,151,0));
+        volver.setBorderPainted(true);
+        volver.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        volver.setContentAreaFilled(true);
+        volver.setFocusPainted(true);
+        volver.setToolTipText("Volver al menu de opciones");
+
+
+
+    }
 
 
     public class CustomPanel extends JPanel {
@@ -88,8 +112,8 @@ public class Ventana_Busqueda extends JFrame{
             datos.append("Nombre: ").append(RS.getString("nombre")).append("\n");
             datos.append("Descipcion: ").append(RS.getString("descripcion")).append("\n");
             datos.append("Precio: ").append(RS.getString("precio")).append("\n");
-            datos.append("Cantidad: ").append(RS.getString("cantidad_stock")).append("\n");
-            datos.append("Categoria: ").append(RS.getString("categoria")).append("\n");
+            datos.append("Cantidad: ").append(RS.getString("stock")).append("\n");
+            datos.append("Categoria: ").append(RS.getString("categoria_id")).append("\n");
 
             JOptionPane.showMessageDialog(null,datos);
 

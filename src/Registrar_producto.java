@@ -1,10 +1,13 @@
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+
+import static java.awt.Cursor.HAND_CURSOR;
 
 public class Registrar_producto extends JFrame{
     private JButton ingresarButton;
@@ -15,6 +18,7 @@ public class Registrar_producto extends JFrame{
     private JTextField cate;
     private JTextField textField6;
     private JPanel panelregistro;
+    private JButton volverButton;
 
     public Registrar_producto() {
         super("Ventana Registro");
@@ -29,10 +33,14 @@ public class Registrar_producto extends JFrame{
 
                 }
 
-
-
-
-
+            }
+        });
+        volverButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Ventana_menu_administrador menu = new Ventana_menu_administrador();
+                menu.ingresar();
+                dispose();
 
             }
         });
@@ -61,7 +69,7 @@ public class Registrar_producto extends JFrame{
         Double precio = Double.parseDouble(Prec.getText());
         String cantidad = cant.getText();
         String cateogira = cate.getText();
-        String sql = "INSERT  INTO Productos(nombre,descripcion,precio,cantidad_stock,categoria)values(?,?,?,?,?)";
+        String sql = "INSERT  INTO Productos(nombre,descripcion,precio,stock,categoria_id,fecha_creacion)values(?,?,?,?,?,NOW())";
         PreparedStatement stmt = conectar.prepareStatement(sql);
         stmt.setString(1,nom);
         stmt.setString(2,descripcion);
@@ -78,6 +86,18 @@ public class Registrar_producto extends JFrame{
             JOptionPane.showMessageDialog(null,"Datos no ingresados");
 
         }
+
+    }
+
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
+
+        volverButton = new JButton();
+        volverButton.setFont(new Font("Arial", Font.BOLD, 16));
+        volverButton.setForeground(Color.WHITE);
+        volverButton.setBackground(Color.getHSBColor(144,151,0));
+        volverButton.setBorderPainted(true);
+        volverButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
     }
 }
