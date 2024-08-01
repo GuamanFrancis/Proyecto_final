@@ -44,12 +44,31 @@ public class Ventana_menu_cajero extends JFrame{
         Image resizedImage = originalImage.getScaledInstance(100, 100, Image.SCALE_SMOOTH); // Redimensionar la imagen
         ImageIcon resizedIcon = new ImageIcon(resizedImage); // Crear un nuevo ImageIcon con la imagen redimensionada
         button1.setIcon(resizedIcon);
+        panelcajero = new JPanel();
+        panelcajero = new CustomPanel("./src/fondocajero.pmg.jpg");
 
 
 
 
 
 
+    }
+
+
+
+
+    public class CustomPanel extends JPanel {
+        private Image backgroundImage;
+        public CustomPanel(String imagePath) {
+
+            backgroundImage = new ImageIcon(imagePath).getImage();
+        }
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+
+            g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+        }
     }
 
 

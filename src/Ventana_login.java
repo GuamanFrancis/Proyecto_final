@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
@@ -10,6 +11,11 @@ public class Ventana_login extends JFrame{
     private JTextField pass;
     private JButton ingresarButton;
     private JButton olvidasteTuContraseñaButton;
+    private JLabel imagenlogo;
+    private JLabel labeltext;
+    private JLabel passwordLabel;
+    private JLabel usuarioLabel;
+    private JPanel panel2;
 
 
     public Ventana_login(String rol) {
@@ -34,7 +40,7 @@ public class Ventana_login extends JFrame{
     }
     public void ingresar(){
         setVisible(true);
-        setSize(400,500);
+        setSize(900,600);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -84,6 +90,63 @@ public class Ventana_login extends JFrame{
     }
 
 
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
+        panellogin = new JPanel();
+        panellogin = new CustomPanel("./src/fondocajero.pmg.jpg");
+        Userid = new JTextField();
+        pass = new JTextField();
+        modificarjtextfield(Userid);
+        modificarjtextfield(pass);
+        imagenlogo = new JLabel();
+        Image imagen= new ImageIcon("./src/imagenes/logoa-fotor-bg-remover-2024073116374.png").getImage();
+        ImageIcon img1=new ImageIcon(imagen.getScaledInstance(150, 150, Image.SCALE_SMOOTH));
+        imagenlogo.setIcon(img1);
+        labeltext = new JLabel();
+        usuarioLabel = new JLabel();
+        passwordLabel = new JLabel();
+        modificarlaber(labeltext);
+        modificarlaber(usuarioLabel);
+        modificarlaber(passwordLabel);
+        panel2 = new JPanel();
+        panel2 = new CustomPanel("./src/imagenes/3874.png");
 
+
+
+
+
+
+    }
+    public void modificarjtextfield(JTextField textField){
+        textField.setBackground(Color.LIGHT_GRAY);
+        textField.setForeground(Color.white);
+        textField.setFont(new Font("Serif", Font.BOLD, 14));
+        textField.setBorder(BorderFactory.createLineBorder(Color.white));
+        textField.setEditable(true);
+
+
+    }
+    public void modificarlaber(JLabel label){
+
+        label.setFont(new Font("Serif", Font.BOLD, 15));
+        label.setForeground(Color.white); // Color del texto
+        label.setOpaque(false);
+        label.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Márgenes superior, izquierdo, inferior y derecho
+
+
+    }
+    public class CustomPanel extends JPanel {
+        private Image backgroundImage;
+        public CustomPanel(String imagePath) {
+
+            backgroundImage = new ImageIcon(imagePath).getImage();
+        }
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+
+            g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+        }
+    }
 }
 

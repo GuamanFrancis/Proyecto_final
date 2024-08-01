@@ -57,8 +57,24 @@ public class Ventana_menu_administrador extends JFrame{
     }
 
 
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
 
+        panelmenu = new JPanel();
+        panelmenu = new CustomPanel("./src/fondoadministrador.jpeg");
+    }
+    public class CustomPanel extends JPanel {
+        private Image backgroundImage;
+        public CustomPanel(String imagePath) {
 
+            backgroundImage = new ImageIcon(imagePath).getImage();
+        }
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
 
+            g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+        }
+    }
 
 }

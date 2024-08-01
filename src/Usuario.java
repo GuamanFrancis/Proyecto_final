@@ -1,22 +1,35 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import static java.awt.Transparency.OPAQUE;
 
 public class Usuario extends JFrame{
     private JButton admi;
     private JButton cajero;
     private JPanel usuarioo;
-    private JLabel logousuario;
-    private JPanel panelimagen;
-    private JLabel imagen;
+    private JLabel labeltitulo;
+    private JLabel labeltexto;
+    private JLabel imagenlogo;
 
-    public Usuario() {
+
+    public Usuario() throws IOException {
         super("Ventana Usuario");
         setContentPane(usuarioo);
-        Image imagen= new ImageIcon("./src/png-transparent-light-circle-geometry-science-and-technology-blue-mechanical-blue-angle-electronics.png").getImage();
-        ImageIcon img1=new ImageIcon(imagen.getScaledInstance(100, 100, Image.SCALE_SMOOTH));
-        logousuario.setIcon(img1);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setVisible(true);
+
+        //Image image = ImageIO.read(new File("./src/png-transparent-light-circle-geometry-science-and-technology-blue-mechanical-blue-angle-electronics.png"));
+       // ImageIcon icon = new ImageIcon(image);
+        //BufferedImage bufferedImage = ImageIO.read(new File("./src/png-transparent-light-circle-geometry-science-and-technology-blue-mechanical-blue-angle-electronics.png"));
+        //ImageIcon icon = new ImageIcon(bufferedImage);
+        //imagenlogo.setIcon(icon);
+
 
 
 
@@ -43,56 +56,70 @@ public class Usuario extends JFrame{
 
     public void ingresar(){
         setVisible(true);
-        setSize(400,500);
+        setSize(900,600);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     }
 
-    private void styleButton(JButton button) {
+    private void metodobotones(JButton button) {
         // Aplicar estilos al botón
 
-        cajero = new JButton("");
-        cajero.setFont(new Font("Arial", Font.BOLD, 16));
-        cajero.setForeground(Color.WHITE);
-        cajero.setBackground(new Color(82, 83, 84, 255));
-        cajero.setOpaque(true);
-        cajero.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-        cajero.setPreferredSize(new Dimension(120, 40));
+
+        button.setFont(new Font("Arial", Font.BOLD, 16));
+        button.setForeground(Color.yellow);
+        button.setBackground(new Color(122, 153, 227, 255));
+        button.setOpaque(true);
+        button.setFocusPainted(false);
+        button.setBorder(BorderFactory.createLineBorder(Color.black, 2));
+        button.setPreferredSize(new Dimension(120, 40));
     }
 
 
     private void createUIComponents() {
-        admi = new JButton("");
-        admi.setFont(new Font("Arial", Font.BOLD, 16));
-        admi.setForeground(Color.WHITE);
-        admi.setBackground(new Color(82, 83, 84, 255));
-        admi.setOpaque(true);
-        admi.setBorder(BorderFactory.createLineBorder(Color.black, 2));
-        admi.setPreferredSize(new Dimension(120, 40));
-        styleButton(cajero);
-
-
-        logousuario = new JLabel("");
-        logousuario.setForeground(Color.WHITE); // Color del texto
-        logousuario.setBackground(new Color(0, 215, 165, 2)); // Color de fondo (necesita setOpaque(true))
-        logousuario.setOpaque(false); // Hace que el color de fondo sea visible
-        logousuario.setPreferredSize(new Dimension(150, 40)); // Tamaño preferido del JLabel
-        logousuario.setHorizontalAlignment(SwingConstants.CENTER); // Alineación horizontal del texto
-        logousuario.setVerticalAlignment(SwingConstants.CENTER);
+        admi = new JButton();
+        cajero = new JButton();
+        metodobotones(cajero);
+        metodobotones(admi);
         usuarioo = new JPanel();
-        usuarioo = new CustomPanel("./src/fondo azul.png"); // Reemplaza con la ruta a tu imagen
+        usuarioo = new CustomPanel("./src/fondoazulmarino.png"); // Reemplaza con la ruta a tu imagen
         usuarioo.setLayout(new FlowLayout(FlowLayout.LEFT));
         usuarioo.setBackground(Color.black); // Cambia el color de fondo
         //usuarioo.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2)); // Añade un borde
-        usuarioo.getGraphics();
-        panelimagen = new JPanel();
-        panelimagen = new CustomPanel("./src/png-transparent-round-blue-illustration-decorative-circle-of-science-and-technology-blue-angle-text.png");
-        logousuario.setBackground(new Color(0, 215, 165, 2));
-        panelimagen.setOpaque(true);
-        panelimagen.setPreferredSize(new Dimension(150, 40));
-        imagen = new JLabel();
 
+        usuarioo.getGraphics();
+        labeltitulo = new JLabel();
+        modificarlaber(labeltitulo);
+        labeltexto =  new JLabel();
+        labeltexto.setFont(new Font("centaur", Font.BOLD, 20));
+        labeltexto.setForeground(Color.white);
+        //label.setOpaque(false);
+        imagenlogo = new JLabel();
+        Image imagen= new ImageIcon("./src/imagenes/logoa-fotor-bg-remover-2024073116374.png").getImage();
+        ImageIcon img1=new ImageIcon(imagen.getScaledInstance(150, 150, Image.SCALE_SMOOTH));
+        imagenlogo.setIcon(img1);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }
+    public void modificarlaber(JLabel label){
+
+        label.setFont(new Font("Serif", Font.BOLD, 30));
+        label.setForeground(Color.white); // Color del texto
+        label.setOpaque(false);
+        label.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Márgenes superior, izquierdo, inferior y derecho
 
 
     }

@@ -58,13 +58,13 @@ public class Ventana_compra extends JFrame{
         limpiarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String espacioenblanco = ""; // Aquí puedes obtener el nombre de cualquier lugar
+                String espacioenblanco = "";
                 textField1.setText(espacioenblanco);
                 textField2.setText(espacioenblanco);
                 textField3.setText(espacioenblanco);
                 textField4.setText(espacioenblanco);
                 textField5.setText(espacioenblanco);
-                buscarButton.setText("");
+                buscarproductos.setText("");
 
 
             }
@@ -106,11 +106,65 @@ public class Ventana_compra extends JFrame{
 
         cargarProductos(model);
         JScrollPane scrollPane = new JScrollPane(table1111);
+        button1 = new JButton();
+        volverButton = new JButton();
+        limpiarButton = new JButton();
+        ingresarButton = new JButton();
+        modificarbotones(button1);
+        modificarbotones(volverButton);
+        modificarbotones(limpiarButton);
+        modificarbotones(ingresarButton);
+        textField1 = new JTextField();
+        modificarjtextfield(textField1);
+        panelcompra = new JPanel();
+        panelcompra = new JPanel();
+        panelcompra = new CustomPanel("./src/fondo azul.png");
+        //modificarfondo(panelcompra);
 
-        // Cargar productos desde la base de datos
 
 
 
+
+
+
+    }
+    public  void modificarfondo(JPanel panel){
+
+        panel = new CustomPanel("./src/fondo azul.png"); // Reemplaza con la ruta a tu imagen
+        panel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        panel.setBackground(Color.black); // Cambia el color de fondo
+        panel.getGraphics();
+
+    }
+    public class CustomPanel extends JPanel {
+        private Image backgroundImage;
+        public CustomPanel(String imagePath) {
+
+            backgroundImage = new ImageIcon(imagePath).getImage();
+        }
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+
+            g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+        }
+    }
+    public void modificarjtextfield(JTextField textField){
+        textField.setBackground(Color.LIGHT_GRAY);
+        textField.setForeground(Color.BLACK);
+        textField.setFont(new Font("Serif", Font.BOLD, 14));
+        textField.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        textField.setEditable(true);
+
+
+    }
+    public  void modificarbotones(JButton button){
+        button.setFont(new Font("Arial", Font.BOLD, 16)); // Cambiar fuente
+        button.setForeground(Color.BLACK); // Cambiar color de texto
+        button.setBackground(Color.LIGHT_GRAY); // Cambiar color de fondo
+        button.setBorderPainted(false); // Quitar el borde del botón
+        button.setContentAreaFilled(true); // Quitar el área de contenido
+        button.setFocusPainted(false); // Quitar el borde de enfoque
 
     }
 
@@ -229,6 +283,20 @@ public class Ventana_compra extends JFrame{
             pstmt = conectar.prepareStatement(sqlUpdateSale);
             pstmt.setDouble(1, subtotal);
             pstmt.setInt(2, saleId);
+            pstmt.executeUpdate();
+
+            String sqlUpdateStock = "UPDATE Productos SET stock = stock - ? WHERE id = ?";
+            pstmt = conectar.prepareStatement(sqlUpdateStock);
+            pstmt.setInt(1, quantity);
+            pstmt.setInt(2, productId);
+            pstmt.executeUpdate();
+
+            // 5. Registrar la factura en la tabla Facturas
+            String sqlInsertInvoice = "INSERT INTO Facturas (venta_id, fecha_emision, cliente_id, total) VALUES (?, CURRENT_TIMESTAMP, ?, ?)";
+            pstmt = conectar.prepareStatement(sqlInsertInvoice);
+            pstmt.setInt(1, saleId);
+            pstmt.setInt(2, customerId);
+            pstmt.setDouble(3, subtotal); // Utiliza el total calculado
             pstmt.executeUpdate();
 
             // Confirmar transacción
