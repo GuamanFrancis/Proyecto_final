@@ -10,22 +10,18 @@ public class Ventana_login extends JFrame{
     private JTextField Userid;
     private JTextField pass;
     private JButton ingresarButton;
-    private JButton olvidasteTuContraseñaButton;
     private JLabel imagenlogo;
-    private JLabel labeltext;
     private JLabel passwordLabel;
     private JLabel usuarioLabel;
+    private JButton cerrar;
+    private JButton minimizar;
     private JPanel panel2;
-
+    private JPanel panelllogo;
 
     public Ventana_login(String rol) {
-
-        super("hola");
+        super("Ventana login");
         setContentPane(panellogin);
-
-
-
-
+        setUndecorated(true);
         ingresarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -37,6 +33,18 @@ public class Ventana_login extends JFrame{
                 }
             }
         });
+        cerrar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+        minimizar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setState(Frame.ICONIFIED);
+            }
+        });
     }
     public void ingresar(){
         setVisible(true);
@@ -45,44 +53,36 @@ public class Ventana_login extends JFrame{
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     }
-    public Connection conexion()throws SQLException{
-        String url = "jdbc:mysql://uingjeu1gmkd2ikl:ngOGTn2MktXQ8MflMQUd@bvaoxw2wxsng8gwobpyh-mysql.services.clever-cloud.com:3306/bvaoxw2wxsng8gwobpyh";
-        String user = "uingjeu1gmkd2ikl";
-        String pass = "ngOGTn2MktXQ8MflMQUd";
-
-        return DriverManager.getConnection(url,user,pass);
-
-    }
 
     public void validardatos(String rol)throws SQLException{
-        Connection conectar = conexion();
-
+        Conexion_base_de_datos datos = new Conexion_base_de_datos();
+        Connection conexion = datos.conexion();
         String sql="";
         if ("Administradores".equalsIgnoreCase(rol)) {
              sql = "SELECT * FROM Administradores WHERE username = ? AND password = ?";
 
         } else if ("Cajeros".equalsIgnoreCase(rol)) {
              sql = "SELECT * FROM Cajeros WHERE username = ? AND password = ?";
+
         }
         String usuario = Userid.getText();
         String password = pass.getText();
-        String usuarios;
-        PreparedStatement stmt = conectar.prepareStatement(sql);
+        PreparedStatement stmt = conexion.prepareStatement(sql);
         stmt.setString(1,usuario);
         stmt.setString(2,password);
         ResultSet rs = stmt.executeQuery();
         if (rs.next()){
+            int idGenerado = rs.getInt("codigo");
+                if ("Cajeros".equalsIgnoreCase(rol)) {
+                    Ventana_menu_cajero cajero = new Ventana_menu_cajero(idGenerado);
+                    cajero.ingresar();
+                    dispose();
+                } else if ("Administradores".equalsIgnoreCase(rol)) {
+                    Ventana_menu_administrador menu = new Ventana_menu_administrador();
+                    menu.ingresar();
+                    dispose();
+                }
 
-            if ("Administradores".equalsIgnoreCase(rol)) {
-                Ventana_menu_administrador menu = new Ventana_menu_administrador();
-                menu.ingresar();
-                dispose();
-
-            } else if ("Cajeros".equalsIgnoreCase(rol)) {
-                Ventana_menu_cajero cajero = new Ventana_menu_cajero();
-                cajero.ingresar();
-                dispose();
-            }
 
         }else{
             JOptionPane.showMessageDialog(null,"Nombre de usuario o contraseña  incorrecto");
@@ -92,8 +92,7 @@ public class Ventana_login extends JFrame{
 
     private void createUIComponents() {
         // TODO: place custom component creation code here
-        panellogin = new JPanel();
-        panellogin = new CustomPanel("./src/fondocajero.pmg.jpg");
+        panellogin = new Conexion_base_de_datos.CustomPanel("./src/fondoazulmarino.png");
         Userid = new JTextField();
         pass = new JTextField();
         modificarjtextfield(Userid);
@@ -102,19 +101,16 @@ public class Ventana_login extends JFrame{
         Image imagen= new ImageIcon("./src/imagenes/logoa-fotor-bg-remover-2024073116374.png").getImage();
         ImageIcon img1=new ImageIcon(imagen.getScaledInstance(150, 150, Image.SCALE_SMOOTH));
         imagenlogo.setIcon(img1);
-        labeltext = new JLabel();
         usuarioLabel = new JLabel();
         passwordLabel = new JLabel();
-        modificarlaber(labeltext);
         modificarlaber(usuarioLabel);
         modificarlaber(passwordLabel);
-        panel2 = new JPanel();
-        panel2 = new CustomPanel("./src/imagenes/3874.png");
-
-
-
-
-
+        panelllogo = new JPanel();
+        panelllogo = new Conexion_base_de_datos.CustomPanel("./src/imagenes/descargar-removebg.png");
+        cerrar = new JButton();
+        minimizar = new JButton();
+        personalizeButton(cerrar);
+        personalizeButton(minimizar);
 
     }
     public void modificarjtextfield(JTextField textField){
@@ -135,18 +131,16 @@ public class Ventana_login extends JFrame{
 
 
     }
-    public class CustomPanel extends JPanel {
-        private Image backgroundImage;
-        public CustomPanel(String imagePath) {
-
-            backgroundImage = new ImageIcon(imagePath).getImage();
-        }
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-
-            g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
-        }
+    private void personalizeButton(JButton button) {
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setContentAreaFilled(false);
+        button.setFont(new Font("Arial", Font.BOLD, 16));
+        button.setForeground(Color.CYAN);
+        button.setBackground(Color.DARK_GRAY);
+        button.setPreferredSize(new Dimension(20, 20));
+        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     }
+
 }
 

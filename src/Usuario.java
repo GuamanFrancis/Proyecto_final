@@ -1,13 +1,8 @@
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-
-import static java.awt.Transparency.OPAQUE;
 
 public class Usuario extends JFrame{
     private JButton admi;
@@ -16,23 +11,16 @@ public class Usuario extends JFrame{
     private JLabel labeltitulo;
     private JLabel labeltexto;
     private JLabel imagenlogo;
+    private JPanel imagenfondo;
+    private JButton cerrar;
+    private JButton minimizar;
 
 
     public Usuario() throws IOException {
         super("Ventana Usuario");
         setContentPane(usuarioo);
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setUndecorated(true);
         setVisible(true);
-
-        //Image image = ImageIO.read(new File("./src/png-transparent-light-circle-geometry-science-and-technology-blue-mechanical-blue-angle-electronics.png"));
-       // ImageIcon icon = new ImageIcon(image);
-        //BufferedImage bufferedImage = ImageIO.read(new File("./src/png-transparent-light-circle-geometry-science-and-technology-blue-mechanical-blue-angle-electronics.png"));
-        //ImageIcon icon = new ImageIcon(bufferedImage);
-        //imagenlogo.setIcon(icon);
-
-
-
-
         admi.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -52,6 +40,18 @@ public class Usuario extends JFrame{
                 dispose();
             }
         });
+        cerrar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+        minimizar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setState(Frame.ICONIFIED);
+            }
+        });
     }
 
     public void ingresar(){
@@ -63,9 +63,6 @@ public class Usuario extends JFrame{
     }
 
     private void metodobotones(JButton button) {
-        // Aplicar estilos al botón
-
-
         button.setFont(new Font("Arial", Font.BOLD, 16));
         button.setForeground(Color.yellow);
         button.setBackground(new Color(122, 153, 227, 255));
@@ -82,34 +79,25 @@ public class Usuario extends JFrame{
         metodobotones(cajero);
         metodobotones(admi);
         usuarioo = new JPanel();
-        usuarioo = new CustomPanel("./src/fondoazulmarino.png"); // Reemplaza con la ruta a tu imagen
+        usuarioo = new Conexion_base_de_datos.CustomPanel("./src/fondoazulmarino.png");
+        imagenfondo = new JPanel();
+        imagenfondo = new Conexion_base_de_datos.CustomPanel("./src/imagenes/descargar-removebg.png");// Reemplaza con la ruta a tu imagen
         usuarioo.setLayout(new FlowLayout(FlowLayout.LEFT));
         usuarioo.setBackground(Color.black); // Cambia el color de fondo
-        //usuarioo.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2)); // Añade un borde
-
         usuarioo.getGraphics();
         labeltitulo = new JLabel();
         modificarlaber(labeltitulo);
         labeltexto =  new JLabel();
         labeltexto.setFont(new Font("centaur", Font.BOLD, 20));
         labeltexto.setForeground(Color.white);
-        //label.setOpaque(false);
         imagenlogo = new JLabel();
-        Image imagen= new ImageIcon("./src/imagenes/logoa-fotor-bg-remover-2024073116374.png").getImage();
-        ImageIcon img1=new ImageIcon(imagen.getScaledInstance(150, 150, Image.SCALE_SMOOTH));
+        Image imagen = new ImageIcon("./src/imagenes/logoa-fotor-bg-remover-2024073116374.png").getImage();
+        ImageIcon img1 = new ImageIcon(imagen.getScaledInstance(150, 150, Image.SCALE_SMOOTH));
         imagenlogo.setIcon(img1);
-
-
-
-
-
-
-
-
-
-
-
-
+        cerrar = new JButton();
+        minimizar = new JButton();
+        personalizeButton(cerrar);
+        personalizeButton(minimizar);
 
 
 
@@ -117,25 +105,25 @@ public class Usuario extends JFrame{
     public void modificarlaber(JLabel label){
 
         label.setFont(new Font("Serif", Font.BOLD, 30));
-        label.setForeground(Color.white); // Color del texto
+        label.setForeground(Color.white);
         label.setOpaque(false);
-        label.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Márgenes superior, izquierdo, inferior y derecho
+        label.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
 
     }
-
-    public class CustomPanel extends JPanel {
-        private Image backgroundImage;
-        public CustomPanel(String imagePath) {
-
-            backgroundImage = new ImageIcon(imagePath).getImage();
-        }
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-
-            g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
-        }
+    private void personalizeButton(JButton button) {
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setContentAreaFilled(false);
+        button.setFont(new Font("Arial", Font.BOLD, 16));
+        button.setForeground(Color.CYAN);
+        button.setBackground(Color.DARK_GRAY);
+        button.setPreferredSize(new Dimension(20, 20));
+        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     }
+
+
+
+
 }
 
