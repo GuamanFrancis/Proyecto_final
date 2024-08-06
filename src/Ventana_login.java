@@ -13,6 +13,7 @@ public class Ventana_login extends JFrame{
     private JLabel imagenlogo;
     private JLabel passwordLabel;
     private JLabel usuarioLabel;
+    private JLabel labeltext;
     private JButton cerrar;
     private JButton minimizar;
     private JPanel panel2;
@@ -25,12 +26,7 @@ public class Ventana_login extends JFrame{
         ingresarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    validardatos(rol);
-                }catch (SQLException ex){
-                    System.out.println(ex.getMessage());
-
-                }
+                validardatos(rol);
             }
         });
         cerrar.addActionListener(new ActionListener() {
@@ -54,81 +50,61 @@ public class Ventana_login extends JFrame{
 
     }
 
-    public void validardatos(String rol)throws SQLException{
+    public void validardatos(String rol) {
         Conexion_base_de_datos datos = new Conexion_base_de_datos();
-        Connection conexion = datos.conexion();
-        String sql="";
-        if ("Administradores".equalsIgnoreCase(rol)) {
-             sql = "SELECT * FROM Administradores WHERE username = ? AND password = ?";
-
-        } else if ("Cajeros".equalsIgnoreCase(rol)) {
-             sql = "SELECT * FROM Cajeros WHERE username = ? AND password = ?";
-
-        }
+        String sql = "";
         String usuario = Userid.getText();
         String password = pass.getText();
-        PreparedStatement stmt = conexion.prepareStatement(sql);
-        stmt.setString(1,usuario);
-        stmt.setString(2,password);
-        ResultSet rs = stmt.executeQuery();
-        if (rs.next()){
-            int idGenerado = rs.getInt("codigo");
-                if ("Cajeros".equalsIgnoreCase(rol)) {
-                    Ventana_menu_cajero cajero = new Ventana_menu_cajero(idGenerado);
-                    cajero.ingresar();
-                    dispose();
-                } else if ("Administradores".equalsIgnoreCase(rol)) {
-                    Ventana_menu_administrador menu = new Ventana_menu_administrador();
-                    menu.ingresar();
-                    dispose();
+        if ("Administradores".equalsIgnoreCase(rol)) {
+            sql = "SELECT * FROM Administradores WHERE username = ? AND password = ?";
+        } else if ("Cajeros".equalsIgnoreCase(rol)) {
+            sql = "SELECT * FROM Cajeros WHERE username = ? AND password = ?";
+        } else {
+            JOptionPane.showMessageDialog(null, "Rol no válido");
+            return;
+        }
+        try (Connection conexion = datos.conexion();
+             PreparedStatement stmt = conexion.prepareStatement(sql)) {
+            stmt.setString(1, usuario);
+            stmt.setString(2, password);
+            try (ResultSet rs = stmt.executeQuery()) {
+                // Verifica si hay resultados
+                if (rs.next()) {
+                    int idGenerado = rs.getInt("codigo");
+                    if ("Cajeros".equalsIgnoreCase(rol)) {
+                        Ventana_menu_cajero cajero = new Ventana_menu_cajero(idGenerado);
+                        cajero.ingresar();
+                    } else if ("Administradores".equalsIgnoreCase(rol)) {
+                        Ventana_menu_administrador menu = new Ventana_menu_administrador();
+                        menu.ingresar();
+                    }
+                    dispose(); // Cierra la ventana actual
+                } else {
+                    JOptionPane.showMessageDialog(null, "Nombre de usuario o contraseña incorrecto");
                 }
-
-
-        }else{
-            JOptionPane.showMessageDialog(null,"Nombre de usuario o contraseña  incorrecto");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al validar los datos: " + e.getMessage());
         }
     }
+
 
 
     private void createUIComponents() {
         // TODO: place custom component creation code here
         panellogin = new Conexion_base_de_datos.CustomPanel("./src/fondoazulmarino.png");
-        Userid = new JTextField();
-        pass = new JTextField();
-        modificarjtextfield(Userid);
-        modificarjtextfield(pass);
         imagenlogo = new JLabel();
         Image imagen= new ImageIcon("./src/imagenes/logoa-fotor-bg-remover-2024073116374.png").getImage();
         ImageIcon img1=new ImageIcon(imagen.getScaledInstance(150, 150, Image.SCALE_SMOOTH));
         imagenlogo.setIcon(img1);
-        usuarioLabel = new JLabel();
-        passwordLabel = new JLabel();
-        modificarlaber(usuarioLabel);
-        modificarlaber(passwordLabel);
-        panelllogo = new JPanel();
         panelllogo = new Conexion_base_de_datos.CustomPanel("./src/imagenes/descargar-removebg.png");
         cerrar = new JButton();
-        minimizar = new JButton();
         personalizeButton(cerrar);
+        minimizar = new JButton();
         personalizeButton(minimizar);
-
-    }
-    public void modificarjtextfield(JTextField textField){
-        textField.setBackground(Color.LIGHT_GRAY);
-        textField.setForeground(Color.white);
-        textField.setFont(new Font("Serif", Font.BOLD, 14));
-        textField.setBorder(BorderFactory.createLineBorder(Color.white));
-        textField.setEditable(true);
-
-
-    }
-    public void modificarlaber(JLabel label){
-
-        label.setFont(new Font("Serif", Font.BOLD, 15));
-        label.setForeground(Color.white); // Color del texto
-        label.setOpaque(false);
-        label.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Márgenes superior, izquierdo, inferior y derecho
-
+        ingresarButton = new JButton();
+        metodobotones(ingresarButton);
 
     }
     private void personalizeButton(JButton button) {
@@ -140,6 +116,15 @@ public class Ventana_login extends JFrame{
         button.setBackground(Color.DARK_GRAY);
         button.setPreferredSize(new Dimension(20, 20));
         button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    }
+    private void metodobotones(JButton button) {
+        button.setFont(new Font("Arial", Font.BOLD, 16));
+        button.setForeground(Color.white);
+        button.setBackground(new Color(122, 153, 227, 255));
+        button.setOpaque(true);
+        button.setFocusPainted(false);
+        button.setBorder(BorderFactory.createLineBorder(Color.black, 2));
+        button.setPreferredSize(new Dimension(120, 40));
     }
 
 }
