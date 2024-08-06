@@ -40,16 +40,7 @@ public class Ventana_menu_administrador extends JFrame{
 
             }
         });
-        button4.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
 
-                Ventana_Eliminar eliminar = new Ventana_Eliminar();
-                eliminar.ingresar();
-                dispose();
-
-            }
-        });
         cerrar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
