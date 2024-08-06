@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -6,44 +7,72 @@ import java.sql.*;
 
 public class Ventana_Busqueda extends JFrame{
 
-
-    private JButton buscarButton;
-    private JPanel panelbusqueda;
-    private JLabel imagenbusqueda;
-    private JLabel imgepn;
     private JPanel panelprincipa;
-    private JTextField busqueda;
-    private JButton volver;
+    private JPanel panel1;
+    private JLabel imageniz;
+    private JLabel imagendere;
+    private JTextField busccajero;
+    private JButton buscarButton;
+    private JTable table1;
+    private JScrollPane scrooll;
+    private JButton mostrarButton;
+    private JPanel paneljtable;
+    private JButton cerrar;
+    private JButton minimizar;
+    private JButton volverButton;
+    private DefaultTableModel model;
+
 
     public Ventana_Busqueda() {
         super("Ventana Busqueda");
-        CustomPanel panelprincipa = new CustomPanel("./src/manga.png");
-        panelprincipa.setLayout(new FlowLayout());
-        setContentPane(panelbusqueda);
+        setContentPane(panelprincipa);
+        setUndecorated(true);
 
-        //Image img= new ImageIcon("./src/manga.png").getImage();
-       // ImageIcon img2=new ImageIcon(img.getScaledInstance(150, 150, Image.SCALE_SMOOTH));
-        //imagenbusqueda.setIcon(img2);
-        Image imge= new ImageIcon("./src/pnglogo.png").getImage();
-        ImageIcon img1=new ImageIcon(imge.getScaledInstance(100, 100, Image.SCALE_SMOOTH));
-        imgepn.setIcon(img1);
+
+
+
 
         buscarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try{
-                    Buscarproducto();
-                }catch (SQLException ex){
-                    System.out.println(ex.getMessage());
+                String nombre = busccajero.getText();
+                try {
+                    cargarDatosporbusqueda(nombre);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+
+            }
+        });
+        mostrarButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    cargarDatos();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
                 }
 
             }
         });
-        volver.addActionListener(new ActionListener() {
+        minimizar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Ventana_menu_administrador menu = new Ventana_menu_administrador();
-                menu.ingresar();
+                setState(Frame.ICONIFIED);
+            }
+        });
+        cerrar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+        volverButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Ventana_menu_administrador ventana = new Ventana_menu_administrador();
+                ventana.ingresar();
                 dispose();
             }
         });
@@ -51,7 +80,7 @@ public class Ventana_Busqueda extends JFrame{
 
     public void ingresar(){
         setVisible(true);
-        setSize(400,500);
+        setSize(900,600);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -60,70 +89,118 @@ public class Ventana_Busqueda extends JFrame{
 
     private void createUIComponents() {
         // TODO: place custom component creation code here
-        volver = new JButton();
-        volver.setFont(new Font("Arial", Font.BOLD, 16));
-        volver.setForeground(Color.WHITE);
-        volver.setBackground(Color.getHSBColor(144,151,0));
-        volver.setBorderPainted(true);
-        volver.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        volver.setContentAreaFilled(true);
-        volver.setFocusPainted(true);
-        volver.setToolTipText("Volver al menu de opciones");
+        panelprincipa = new Conexion_base_de_datos.CustomPanel("./src/fondocajero.pmg.jpg");
+        panel1 = new Conexion_base_de_datos.CustomPanel("./src/imagenes/descargar-removebg.png");
+        imageniz = new JLabel();
+        Image imagen = new ImageIcon("./src/imagenes/user.png").getImage();
+        ImageIcon img1 = new ImageIcon(imagen.getScaledInstance(70, 70, Image.SCALE_SMOOTH));
+        imageniz.setIcon(img1);
+        imagendere = new JLabel();
+        Image imagen1 = new ImageIcon("./src/imagenes/search.png").getImage();
+        ImageIcon img2 = new ImageIcon(imagen1.getScaledInstance(70, 70, Image.SCALE_SMOOTH));
+        imagendere.setIcon(img2);
+        model = new DefaultTableModel();
+        model.addColumn("Cliente ID");
+        model.addColumn("Fecha venta");
+        model.addColumn("Cajero ID");
+        model.addColumn("Total venta");
+        table1 = new JTable(model);
+        table1.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        table1.setShowGrid(true); // Mostrar la cuadrícula
+        table1.setGridColor(Color.GRAY); // Color de la cuadrícula
+        table1.getTableHeader().setReorderingAllowed(false);
+        add(table1);
+        scrooll = new JScrollPane(table1);
+        scrooll.setPreferredSize(new Dimension(300, 400));
+        cerrar = new JButton();
+        minimizar = new JButton();
+        volverButton = new JButton();
+        personalizeButton(volverButton);
+        personalizeButton(cerrar);
+        personalizeButton(minimizar);
 
 
 
-    }
-
-
-    public class CustomPanel extends JPanel {
-        private Image backgroundImage;
-        public CustomPanel(String imagePath) {
-
-            backgroundImage = new ImageIcon(imagePath).getImage();
-        }
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-
-            g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
-        }
-    }
-
-    public Connection conexion()throws SQLException {
-        String url = "jdbc:mysql://uingjeu1gmkd2ikl:ngOGTn2MktXQ8MflMQUd@bvaoxw2wxsng8gwobpyh-mysql.services.clever-cloud.com:3306/bvaoxw2wxsng8gwobpyh";
-        String user = "uingjeu1gmkd2ikl";
-        String pass = "ngOGTn2MktXQ8MflMQUd";
-
-        return DriverManager.getConnection(url,user,pass);
 
     }
-
-    public void Buscarproducto()throws SQLException{
-        Connection conectar = conexion();
-        String producto = busqueda.getText();
-        String sql = "SELECT * FROM Productos WHERE id = ? ";
-
-        PreparedStatement stmt = conectar.prepareStatement(sql);
-        stmt.setString(1,producto);
-
-        ResultSet RS = stmt.executeQuery();
-        StringBuilder datos = new StringBuilder("");
-        if (RS.next()) {
-            datos.append("Nombre: ").append(RS.getString("nombre")).append("\n");
-            datos.append("Descipcion: ").append(RS.getString("descripcion")).append("\n");
-            datos.append("Precio: ").append(RS.getString("precio")).append("\n");
-            datos.append("Cantidad: ").append(RS.getString("stock")).append("\n");
-            datos.append("Categoria: ").append(RS.getString("categoria_id")).append("\n");
-
-            JOptionPane.showMessageDialog(null,datos);
-
-        }else{
-
-            JOptionPane.showMessageDialog(null,"No se encontro el producto");
-
+    private void cargarDatos()throws SQLException {
+        Connection conexion=null;
+        Statement statement = null;
+        ResultSet resultSet=null;
+        try {
+            conexion = new Conexion_base_de_datos().conexion();
+            model.setRowCount(0);
+             statement = conexion.createStatement();
+             resultSet = statement.executeQuery("SELECT * FROM Ventas");
+            while (resultSet.next()) {
+                model.addRow(new Object[]{
+                        resultSet.getString("cliente_id"),
+                        resultSet.getString("fecha_venta"),
+                        resultSet.getString("usuario_id"),
+                        resultSet.getDouble("total")
+                });
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+                new Conexion_base_de_datos().cerrarRecursos(conexion,statement,resultSet);
         }
     }
 
+
+    private void cargarDatosporbusqueda(String name)throws SQLException {
+        Connection conexion=null;
+        PreparedStatement stmt = null;
+        ResultSet resultSet=null;
+        try {
+            conexion = new Conexion_base_de_datos().conexion();
+            String sql ="SELECT codigo FROM Cajeros WHERE username = ?";
+            stmt = conexion.prepareStatement(sql);
+            stmt.setString(1, name);
+            resultSet = stmt.executeQuery();
+            if (resultSet.next()) {
+                int idCajero = resultSet.getInt("codigo");
+                Connection conexion2=null;
+                PreparedStatement stmtVentas = null;
+                ResultSet ventasResultSet=null;
+                String sqlVentas = "SELECT cliente_id, fecha_venta,usuario_id,total FROM Ventas WHERE usuario_id = ?";
+                    try {
+                        conexion2= new Conexion_base_de_datos().conexion();
+                        model.setRowCount(0);
+                        stmtVentas = conexion2.prepareStatement(sqlVentas);
+                        stmtVentas.setInt(1, idCajero);
+                         ventasResultSet = stmtVentas.executeQuery();
+                        while (ventasResultSet.next()) {
+                            model.addRow(new Object[]{
+                                ventasResultSet.getString("cliente_id"),
+                                ventasResultSet.getString("fecha_venta"),
+                                ventasResultSet.getString("usuario_id"),
+                                ventasResultSet.getDouble("total")
+                            });
+                        }
+                    }catch (SQLException ex){
+                        ex.printStackTrace();
+                    } finally {
+                        new Conexion_base_de_datos().cerrarRecursos(conexion,stmtVentas,ventasResultSet);
+                    }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            new Conexion_base_de_datos().cerrarRecursos(conexion,stmt,resultSet);
+        }
+    }
+    private void personalizeButton(JButton button) {
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setContentAreaFilled(false);
+        button.setFont(new Font("Arial", Font.BOLD, 16));
+        button.setForeground(Color.CYAN);
+        button.setBackground(Color.DARK_GRAY);
+        button.setPreferredSize(new Dimension(20, 20)); // Tamaño personalizado
+        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Cambiar el cursor
+    }
 
 
 }
