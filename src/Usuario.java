@@ -62,15 +62,7 @@ public class Usuario extends JFrame{
 
     }
 
-    private void metodobotones(JButton button) {
-        button.setFont(new Font("Arial", Font.BOLD, 16));
-        button.setForeground(Color.yellow);
-        button.setBackground(new Color(122, 153, 227, 255));
-        button.setOpaque(true);
-        button.setFocusPainted(false);
-        button.setBorder(BorderFactory.createLineBorder(Color.black, 2));
-        button.setPreferredSize(new Dimension(120, 40));
-    }
+
 
 
     private void createUIComponents() {
@@ -85,8 +77,7 @@ public class Usuario extends JFrame{
         usuarioo.setLayout(new FlowLayout(FlowLayout.LEFT));
         usuarioo.setBackground(Color.black); // Cambia el color de fondo
         usuarioo.getGraphics();
-        labeltitulo = new JLabel();
-        modificarlaber(labeltitulo);
+
         labeltexto =  new JLabel();
         labeltexto.setFont(new Font("centaur", Font.BOLD, 20));
         labeltexto.setForeground(Color.white);
@@ -98,18 +89,16 @@ public class Usuario extends JFrame{
         minimizar = new JButton();
         personalizeButton(cerrar);
         personalizeButton(minimizar);
-
-
-
     }
-    public void modificarlaber(JLabel label){
 
-        label.setFont(new Font("Serif", Font.BOLD, 30));
-        label.setForeground(Color.white);
-        label.setOpaque(false);
-        label.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
-
+    private void metodobotones(JButton button) {
+        button.setFont(new Font("Arial", Font.BOLD, 16));
+        button.setForeground(Color.white);
+        button.setBackground(new Color(122, 153, 227, 255));
+        button.setOpaque(true);
+        button.setFocusPainted(false);
+        button.setBorder(BorderFactory.createLineBorder(Color.black, 2));
+        button.setPreferredSize(new Dimension(120, 40));
     }
     private void personalizeButton(JButton button) {
         button.setFocusPainted(false);
