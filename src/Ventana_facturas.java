@@ -289,9 +289,9 @@ public class Ventana_facturas extends JFrame{
 
                 contentStream.close();
                 String desktop = System.getProperty("user.home") + "/Desktop/";
-                rutaSalida = desktop + "Factura_" + ventaId + ".pdf";
+                 rutaSalida = desktop + "Factura_" + ventaId + ".pdf";
                 document.save(rutaSalida);
-                JOptionPane.showMessageDialog(null, "Se creó el archivo '" + rutaSalida + "' en la carpeta del proyecto");
+                JOptionPane.showMessageDialog(null, "Se creó el archivo 'factura_" + ventaId + "' en la carpeta Desktop");
 
 
             }catch (SQLException ex) {
