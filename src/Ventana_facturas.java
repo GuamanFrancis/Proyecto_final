@@ -62,7 +62,7 @@ public class Ventana_facturas extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 int selectedRow = table1.getSelectedRow();
                 if (selectedRow >= 0) {
-                    String ventaId = model1.getValueAt(selectedRow, 0).toString(); // ID de la venta
+                    String ventaId = model1.getValueAt(selectedRow, 1).toString(); // ID de la venta
                     String rutaSalida = "Factura_" + ventaId + ".pdf"; // Nombre del archivo PDF
                     generarPDF(ventaId, rutaSalida);
                 } else {
@@ -186,6 +186,7 @@ public class Ventana_facturas extends JFrame{
                     "WHERE f.venta_id = " + ventaId;
 
              facturaResultSet = statement.executeQuery(facturasql);
+            System.out.println("Consulta para ventaId: " + ventaId);
 
             if (facturaResultSet.next()) {
                 contentStream.beginText();
@@ -231,7 +232,6 @@ public class Ventana_facturas extends JFrame{
             try {
                  detallesResultSet = statement.executeQuery(detallessql);
 
-                // Añadir tabla de productos/servicios
                 contentStream.moveTo(50, 530);
                 contentStream.lineTo(550, 530);
                 contentStream.stroke();
@@ -284,7 +284,7 @@ public class Ventana_facturas extends JFrame{
                     contentStream.showText(detallesResultSet.getString("subtotal") + " $");
                     contentStream.endText();
 
-                    yOffset -= 20; // Decrementa la coordenada Y para la siguiente fila
+                    yOffset -= 20;
                 }
 
                 contentStream.close();
