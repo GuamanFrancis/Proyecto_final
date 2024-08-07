@@ -20,7 +20,11 @@ public class Ventana_Busqueda extends JFrame{
     private JButton cerrar;
     private JButton minimizar;
     private JButton volverButton;
+    private JTable table2;
+    private JButton mostrarButton1;
+    private JScrollPane scrollPane1;
     private DefaultTableModel model;
+    private DefaultTableModel model2;
 
 
     public Ventana_Busqueda() {
@@ -76,6 +80,17 @@ public class Ventana_Busqueda extends JFrame{
                 dispose();
             }
         });
+        mostrarButton1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    cargarDatoscajero();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+            }
+        });
     }
 
     public void ingresar(){
@@ -105,23 +120,57 @@ public class Ventana_Busqueda extends JFrame{
         model.addColumn("Cajero ID");
         model.addColumn("Total venta");
         table1 = new JTable(model);
-        table1.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-        table1.setShowGrid(true); // Mostrar la cuadrícula
-        table1.setGridColor(Color.GRAY); // Color de la cuadrícula
-        table1.getTableHeader().setReorderingAllowed(false);
-        add(table1);
+
         scrooll = new JScrollPane(table1);
         scrooll.setPreferredSize(new Dimension(300, 400));
+        model2 = new DefaultTableModel();
+        model2.addColumn("Codigo");
+        model2.addColumn("Username");
+        model2.addColumn("Correo");
+        model2.addColumn("Nombre y apellido");
+        table2 = new JTable(model2);
+        add(table2);
+        scrollPane1 = new JScrollPane(table2);
+        scrollPane1.setPreferredSize(new Dimension(300, 400));
         cerrar = new JButton();
         minimizar = new JButton();
         volverButton = new JButton();
-        personalizeButton(volverButton);
-        personalizeButton(cerrar);
-        personalizeButton(minimizar);
+        mostrarButton= new JButton();
+        mostrarButton1= new JButton();
+        buscarButton = new JButton();
+        Conexion_base_de_datos.personalizeButton(volverButton);
+        Conexion_base_de_datos.personalizeButton(cerrar);
+        Conexion_base_de_datos.personalizeButton(minimizar);
+        Conexion_base_de_datos.metodobotones(mostrarButton);
+        Conexion_base_de_datos.metodobotones(buscarButton);
+        Conexion_base_de_datos.metodobotones(mostrarButton1);
 
 
 
 
+    }
+    private void cargarDatoscajero()throws SQLException {
+        Connection conexion=null;
+        Statement statement = null;
+        ResultSet resultSet=null;
+        try {
+            conexion=new Conexion_base_de_datos().conexion();
+            model2.setRowCount(0);
+            statement = conexion.createStatement();
+            resultSet = statement.executeQuery("SELECT * FROM Cajeros");
+            while (resultSet.next()) {
+                model2.addRow(new Object[]{
+                        resultSet.getString("codigo"),
+                        resultSet.getString("username"),
+                        resultSet.getString("Correo"),
+                        resultSet.getString("Nombre_y_Apellido")
+                });
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            new Conexion_base_de_datos().cerrarRecursos(conexion,statement,resultSet);
+        }
     }
     private void cargarDatos()throws SQLException {
         Connection conexion=null;
@@ -191,16 +240,5 @@ public class Ventana_Busqueda extends JFrame{
             new Conexion_base_de_datos().cerrarRecursos(conexion,stmt,resultSet);
         }
     }
-    private void personalizeButton(JButton button) {
-        button.setFocusPainted(false);
-        button.setBorderPainted(false);
-        button.setContentAreaFilled(false);
-        button.setFont(new Font("Arial", Font.BOLD, 16));
-        button.setForeground(Color.CYAN);
-        button.setBackground(Color.DARK_GRAY);
-        button.setPreferredSize(new Dimension(20, 20)); // Tamaño personalizado
-        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Cambiar el cursor
-    }
-
 
 }

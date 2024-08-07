@@ -46,6 +46,7 @@ public class Registrar_producto extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 try{Registrarproductos();
+                    nombre.setText("");Des.setText("");Prec.setText("");cant.setText("");imagen.setText("");imagenRuta = null;
                 } catch(SQLException ex) {
                     System.out.println(ex.getMessage());}
                  catch (FileNotFoundException ex) {
@@ -83,16 +84,24 @@ public class Registrar_producto extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 try {
                     ingresarcajero();
+                    nombre.setText("");
+                    Des.setText("");
+                    Prec.setText("");
+                    cant.setText("");
+                    imagen.setText("");
+                    imagenRuta = null;
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
+
 
             }
         });
 
         mostrarCajerosButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {try {cargarDatos();} catch (SQLException ex) {throw new RuntimeException(ex);}}
+            public void actionPerformed(ActionEvent e) {
+                try {cargarDatos();} catch (SQLException ex) {throw new RuntimeException(ex);}}
         });
         minimizar.addActionListener(new ActionListener() {
             @Override
@@ -218,6 +227,7 @@ public class Registrar_producto extends JFrame{
             int columnas = stmt.executeUpdate();
             if (columnas>0){
                 JOptionPane.showMessageDialog(null,"Datos ingresados exitosamente");
+
             }else{
                 JOptionPane.showMessageDialog(null,"Datos no ingresados");
             }
@@ -227,10 +237,8 @@ public class Registrar_producto extends JFrame{
         }finally {
             new Conexion_base_de_datos().cerrarRecursos(conectar,stmt,null);
         }
-
-
-
     }
+
     private void cargarDatoss()throws SQLException {
         Connection conexion=null;
         Statement statement = null;
