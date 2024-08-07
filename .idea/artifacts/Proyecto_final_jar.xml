@@ -1,0 +1,12 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Proyecto_final:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Proyecto_final_jar</output-path>
+    <root id="archive" name="Proyecto_final.jar">
+      <element id="module-output" name="Proyecto_final" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/pdfbox/pdfbox/2.0.26/pdfbox-2.0.26.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/pdfbox/fontbox/2.0.26/fontbox-2.0.26.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/commons-logging/commons-logging/1.2/commons-logging-1.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="D:/dal/mysql-connector-j-9.0.0/mysql-connector-j-9.0.0.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
