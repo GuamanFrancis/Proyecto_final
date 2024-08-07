@@ -1,0 +1,7 @@
+# 🎥 Video Tutorial
+
+¡Mira cómo funciona el proyecto en este video!
+
+[![Video de Manual de Usuario](https://img.youtube.com/vi/Y2tzMewRPkY/hqdefault.jpg)](https://www.youtube.com/watch?v=Y2tzMewRPkY)
+
+**Descripción**: En este video, te mostraré cómo funciona mi proyecto basado en un sistema de ventas de accesorios telefonicos
