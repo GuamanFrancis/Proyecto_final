@@ -1,7 +1,7 @@
 -----------------------------------------
               MANUAL DE USUARIO
                 Proyecto Final
-   Sistema de ventas de accesorios electrónicos
+   Sistema de ventas de accesorios celulares
 -----------------------------------------
 
 Autor: Francis Guaman  
