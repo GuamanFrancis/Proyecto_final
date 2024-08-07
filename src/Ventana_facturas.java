@@ -62,8 +62,8 @@ public class Ventana_facturas extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 int selectedRow = table1.getSelectedRow();
                 if (selectedRow >= 0) {
-                    String ventaId = model1.getValueAt(selectedRow, 1).toString(); // ID de la venta
-                    String rutaSalida = "Factura_" + ventaId + ".pdf"; // Nombre del archivo PDF
+                    String ventaId = model1.getValueAt(selectedRow, 1).toString();
+                    String rutaSalida = "Factura_" + ventaId + ".pdf";
                     generarPDF(ventaId, rutaSalida);
                 } else {
                     JOptionPane.showMessageDialog(null, "Por favor, selecciona una fila de la tabla.");
@@ -288,6 +288,8 @@ public class Ventana_facturas extends JFrame{
                 }
 
                 contentStream.close();
+                String desktop = System.getProperty("user.home") + "/Desktop/";
+                rutaSalida = desktop + "Factura_" + ventaId + ".pdf";
                 document.save(rutaSalida);
                 JOptionPane.showMessageDialog(null, "Se creó el archivo '" + rutaSalida + "' en la carpeta del proyecto");
 
