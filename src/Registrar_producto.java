@@ -6,7 +6,14 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.sql.*;
 
-public class Registrar_producto extends JFrame{
+/**
+ * La clase Registrar_producto maneja el registro de productos y cajeros en la base de datos,
+ * así como la interfaz gráfica de usuario para estas operaciones.
+ *
+ * @version 1.0
+ * @since 2024-08-08
+ */
+public class Registrar_producto extends JFrame {
     private JButton ingresarButton;
     private JTextField nombre;
     private JTextField Des;
@@ -18,7 +25,6 @@ public class Registrar_producto extends JFrame{
     private JButton volverButton;
     private JButton registrarCajeroButton;
     private JTable table1;
-
     private JTextField nomcajero;
     private JTextField usercajero;
     private JButton seleccionarButton;
@@ -36,7 +42,9 @@ public class Registrar_producto extends JFrame{
     private DefaultTableModel model1;
     private DefaultTableModel model2;
 
-
+    /**
+     * Constructor que inicializa la interfaz gráfica y configura los manejadores de eventos.
+     */
     public Registrar_producto() {
         super("Ventana Registro");
         setContentPane(panelregistro);
@@ -45,28 +53,33 @@ public class Registrar_producto extends JFrame{
         ingresarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try{Registrarproductos();
-                    nombre.setText("");Des.setText("");Prec.setText("");cant.setText("");imagen.setText("");imagenRuta = null;
-                } catch(SQLException ex) {
-                    System.out.println(ex.getMessage());}
-                 catch (FileNotFoundException ex) {
+                try {
+                    Registrarproductos();
+                    nombre.setText("");
+                    Des.setText("");
+                    Prec.setText("");
+                    cant.setText("");
+                    imagen.setText("");
+                    imagenRuta = null;
+                } catch (SQLException ex) {
+                    System.out.println(ex.getMessage());
+                } catch (FileNotFoundException ex) {
                     throw new RuntimeException(ex);
                 }
-            }});
+            }
+        });
         volverButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-               Ventana_menu_administrador menu = new Ventana_menu_administrador();
-               menu.ingresar();
-               dispose();
+                Ventana_menu_administrador menu = new Ventana_menu_administrador();
+                menu.ingresar();
+                dispose();
             }
         });
-
         seleccionarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 seleccionarImagen();
-
             }
         });
         mostrarproducto.addActionListener(new ActionListener() {
@@ -84,24 +97,24 @@ public class Registrar_producto extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 try {
                     ingresarcajero();
-                    nombre.setText("");
-                    Des.setText("");
-                    Prec.setText("");
-                    cant.setText("");
-                    imagen.setText("");
-                    imagenRuta = null;
+                    nomcajero.setText("");
+                    usercajero.setText("");
+                    correocajero.setText("");
+                    passwordcajero.setText("");
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
-
-
             }
         });
-
         mostrarCajerosButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {cargarDatos();} catch (SQLException ex) {throw new RuntimeException(ex);}}
+                try {
+                    cargarDatos();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
         });
         minimizar.addActionListener(new ActionListener() {
             @Override
@@ -116,13 +129,23 @@ public class Registrar_producto extends JFrame{
             }
         });
     }
-    public void ingresar(){
+
+    /**
+     * Configura y muestra la ventana principal.
+     */
+    public void ingresar() {
         setVisible(true);
-        setSize(900,600);
+        setSize(900, 600);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
+    /**
+     * Registra un producto en la base de datos.
+     *
+     * @throws SQLException           Si ocurre un error en la base de datos.
+     * @throws FileNotFoundException Si el archivo de imagen no se encuentra.
+     */
     public void Registrarproductos() throws SQLException, FileNotFoundException {
         Connection cone = null;
         PreparedStatement stmt = null;
@@ -132,12 +155,12 @@ public class Registrar_producto extends JFrame{
         String cantidad = cant.getText();
         try {
             cone = new Conexion_base_de_datos().conexion();
-            String sql = "INSERT  INTO Productos(nombre,descripcion,precio,stock,imagenes,fecha_creacion)values(?,?,?,?,?,NOW())";
+            String sql = "INSERT INTO Productos(nombre, descripcion, precio, stock, imagenes, fecha_creacion) VALUES (?, ?, ?, ?, ?, NOW())";
             stmt = cone.prepareStatement(sql);
-            stmt.setString(1,nom);
-            stmt.setString(2,descripcion);
-            stmt.setDouble(3,precio);
-            stmt.setInt(4,Integer.parseInt(cantidad));
+            stmt.setString(1, nom);
+            stmt.setString(2, descripcion);
+            stmt.setDouble(3, precio);
+            stmt.setInt(4, Integer.parseInt(cantidad));
             if (imagenRuta != null) {
                 FileInputStream fis = new FileInputStream(new File(imagenRuta));
                 stmt.setBinaryStream(5, fis, (int) new File(imagenRuta).length());
@@ -145,18 +168,21 @@ public class Registrar_producto extends JFrame{
                 stmt.setNull(5, Types.BLOB);
             }
             int columnas = stmt.executeUpdate();
-            if (columnas>0){
-                JOptionPane.showMessageDialog(null,"Datos ingresados exitosamente");
-            }else{
-                JOptionPane.showMessageDialog(null,"Datos no ingresados");
+            if (columnas > 0) {
+                JOptionPane.showMessageDialog(null, "Datos ingresados exitosamente");
+            } else {
+                JOptionPane.showMessageDialog(null, "Datos no ingresados");
             }
-        }catch (SQLException ex) {
+        } catch (SQLException ex) {
             ex.printStackTrace();
         } finally {
             new Conexion_base_de_datos().cerrarRecursos(cone, stmt, null);
         }
-
     }
+
+    /**
+     * Abre un selector de archivos para seleccionar una imagen y almacena la ruta seleccionada.
+     */
     private void seleccionarImagen() {
         JFileChooser fileChooser = new JFileChooser();
         int resultado = fileChooser.showOpenDialog(null);
@@ -167,10 +193,14 @@ public class Registrar_producto extends JFrame{
         }
     }
 
+    /**
+     * Crea componentes personalizados de la interfaz gráfica.
+     *
+     * @throws SQLException Si ocurre un error en la base de datos.
+     */
     private void createUIComponents() throws SQLException {
-        // TODO: place custom component creation code here
         volverButton = new JButton();
-        personalizeButton(volverButton);
+        Conexion_base_de_datos.personalizeButton(volverButton);
         panelregistro = new Conexion_base_de_datos.CustomPanel("./src/fondocajero.pmg.jpg");
         panel2 = new Conexion_base_de_datos.CustomPanel("./src/imagenes/descargar-removebg.png");
         imagenlabel = new JLabel();
@@ -179,7 +209,14 @@ public class Registrar_producto extends JFrame{
         imagenlabel.setIcon(img1);
         model1 = new DefaultTableModel();
         model2 = new DefaultTableModel();
-        model2.addColumn("Cliente ID");model2.addColumn("Username");model2.addColumn("Cajero");model2.addColumn("Nombre completo");model1.addColumn("Cliente ID");model1.addColumn("Fecha venta");model1.addColumn("Cajero ID");model1.addColumn("Total venta");
+        model2.addColumn("Cliente ID");
+        model2.addColumn("Username");
+        model2.addColumn("Cajero");
+        model2.addColumn("Nombre completo");
+        model1.addColumn("Cliente ID");
+        model1.addColumn("Fecha venta");
+        model1.addColumn("Cajero ID");
+        model1.addColumn("Total venta");
         table1 = new JTable(model1);
         table2 = new JTable(model2);
         add(table1);
@@ -202,55 +239,55 @@ public class Registrar_producto extends JFrame{
         Conexion_base_de_datos.metodobotones(registrarCajeroButton);
         Conexion_base_de_datos.personalizeButton(minimizar);
         Conexion_base_de_datos.personalizeButton(cerrar);
-
-
-
-
-
     }
 
-    public void ingresarcajero()throws SQLException{
-        Connection conectar =null;
-        PreparedStatement stmt=null;
+    /**
+     * Registra un cajero en la base de datos.
+     *
+     * @throws SQLException Si ocurre un error en la base de datos.
+     */
+    public void ingresarcajero() throws SQLException {
+        Connection conectar = null;
+        PreparedStatement stmt = null;
         String nomb = nomcajero.getText();
         String user = usercajero.getText();
         String correo = correocajero.getText();
-        String pass = passwordcajero.getText();
-        String sql = " INSERT  INTO Cajeros(username,password,Correo,Nombre_y_Apellido)values(?,?,?,?)";
+        String pass = new String(passwordcajero.getPassword());
+        String sql = "INSERT INTO Cajeros(username, password, Correo, Nombre_y_Apellido) VALUES (?, ?, ?, ?)";
         try {
             conectar = new Conexion_base_de_datos().conexion();
             stmt = conectar.prepareStatement(sql);
-            stmt.setString(1,user);
-            stmt.setString(2,pass);
-            stmt.setString(3,correo);
-            stmt.setString(4,nomb);
+            stmt.setString(1, user);
+            stmt.setString(2, pass);
+            stmt.setString(3, correo);
+            stmt.setString(4, nomb);
             int columnas = stmt.executeUpdate();
-            if (columnas>0){
-                JOptionPane.showMessageDialog(null,"Datos ingresados exitosamente");
-
-            }else{
-                JOptionPane.showMessageDialog(null,"Datos no ingresados");
+            if (columnas > 0) {
+                JOptionPane.showMessageDialog(null, "Datos ingresados exitosamente");
+            } else {
+                JOptionPane.showMessageDialog(null, "Datos no ingresados");
             }
-
-        }catch (SQLException ex){
+        } catch (SQLException ex) {
             System.out.println(ex.getMessage());
-        }finally {
-            new Conexion_base_de_datos().cerrarRecursos(conectar,stmt,null);
+        } finally {
+            new Conexion_base_de_datos().cerrarRecursos(conectar, stmt, null);
         }
     }
 
-    private void cargarDatoss()throws SQLException {
-        Connection conexion=null;
+    /**
+     * Carga los datos de los productos desde la base de datos y los muestra en la tabla.
+     *
+     * @throws SQLException Si ocurre un error en la base de datos.
+     */
+    private void cargarDatoss() throws SQLException {
+        Connection conexion = null;
         Statement statement = null;
-        ResultSet resultSet=null;
-
+        ResultSet resultSet = null;
         try {
             conexion = new Conexion_base_de_datos().conexion();
             model1.setRowCount(0);
-            Conexion_base_de_datos da = new Conexion_base_de_datos();
-             conexion = da.conexion();
-             statement = conexion.createStatement();
-             resultSet = statement.executeQuery("SELECT * FROM Productos");
+            statement = conexion.createStatement();
+            resultSet = statement.executeQuery("SELECT * FROM Productos");
             while (resultSet.next()) {
                 model1.addRow(new Object[]{
                         resultSet.getString("nombre"),
@@ -261,19 +298,25 @@ public class Registrar_producto extends JFrame{
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        }finally {
-            new Conexion_base_de_datos().cerrarRecursos(conexion,statement,resultSet);
+        } finally {
+            new Conexion_base_de_datos().cerrarRecursos(conexion, statement, resultSet);
         }
     }
-    private void cargarDatos()throws SQLException {
-        Connection conexion=null;
+
+    /**
+     * Carga los datos de los cajeros desde la base de datos y los muestra en la tabla.
+     *
+     * @throws SQLException Si ocurre un error en la base de datos.
+     */
+    private void cargarDatos() throws SQLException {
+        Connection conexion = null;
         Statement statement = null;
-        ResultSet resultSet=null;
+        ResultSet resultSet = null;
         try {
-            conexion=new Conexion_base_de_datos().conexion();
+            conexion = new Conexion_base_de_datos().conexion();
             model2.setRowCount(0);
-             statement = conexion.createStatement();
-             resultSet = statement.executeQuery("SELECT * FROM Cajeros");
+            statement = conexion.createStatement();
+            resultSet = statement.executeQuery("SELECT * FROM Cajeros");
             while (resultSet.next()) {
                 model2.addRow(new Object[]{
                         resultSet.getString("codigo"),
@@ -284,21 +327,10 @@ public class Registrar_producto extends JFrame{
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        }finally {
-            new Conexion_base_de_datos().cerrarRecursos(conexion,statement,resultSet);
+        } finally {
+            new Conexion_base_de_datos().cerrarRecursos(conexion, statement, resultSet);
         }
     }
 
-    private void personalizeButton(JButton button) {
-        button.setFocusPainted(false);
-        button.setBorderPainted(false);
-        button.setContentAreaFilled(false);
-        button.setFont(new Font("Arial", Font.BOLD, 16));
-        button.setForeground(Color.CYAN);
-        button.setBackground(Color.DARK_GRAY);
-        button.setPreferredSize(new Dimension(20, 20)); // Tamaño personalizado
-        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Cambiar el cursor
-    }
-
-
 }
+

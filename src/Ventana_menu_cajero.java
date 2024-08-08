@@ -4,7 +4,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
-public class Ventana_menu_cajero extends JFrame{
+/**
+ * Clase Ventana_menu_cajero que representa la interfaz gráfica para el menú de cajero.
+ * Extiende JFrame para crear una ventana donde los cajeros pueden realizar diferentes acciones.
+ */
+public class Ventana_menu_cajero extends JFrame {
 
     private JButton comprarButton;
     private JButton mostrarButton;
@@ -15,94 +19,97 @@ public class Ventana_menu_cajero extends JFrame{
     private JPanel panel11;
     private int idCajero;
 
+    /**
+     * Constructor de la clase Ventana_menu_cajero.
+     *
+     * @param idCajero El ID del cajero.
+     */
     public Ventana_menu_cajero(int idCajero) {
         super("Ventana Menu Cajero");
         setContentPane(panelcajero);
-        setUndecorated(true);
-        this.idCajero = idCajero;
+        setUndecorated(true); // Desactiva el decorado de la ventana
+        this.idCajero = idCajero; // Asigna el ID del cajero
+
+        // Acción para realizar una compra
         comprarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                    Ventana_compra compra = new Ventana_compra(idCajero);
-                    compra.ingresar();
-                    dispose();
+                Ventana_compra compra = new Ventana_compra(idCajero);
+                compra.ingresar(); // Muestra la ventana de compra
+                dispose(); // Cierra la ventana actual
             }
         });
 
+        // Acción para cerrar la aplicación
         cerrar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.exit(0);
+                System.exit(0); // Cierra la aplicación
             }
         });
+
+        // Acción para minimizar la ventana
         minimizar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                setState(Frame.ICONIFIED);
+                setState(Frame.ICONIFIED); // Minimiza la ventana
             }
         });
+
+        // Acción para volver al menú anterior
         volverButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     Usuario usu = new Usuario();
-                    usu.ingresar();
-                    dispose();
+                    usu.ingresar(); // Muestra la ventana del usuario
+                    dispose(); // Cierra la ventana actual
                 } catch (IOException ex) {
-                    throw new RuntimeException(ex);
+                    throw new RuntimeException(ex); // Manejo de excepciones
                 }
-
             }
         });
+
+        // Acción para mostrar las facturas
         mostrarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Ventana_facturas factura = new Ventana_facturas(idCajero);
-                factura.ingresar();
-                dispose();
+                factura.ingresar(); // Muestra la ventana de facturas
+                dispose(); // Cierra la ventana actual
             }
         });
     }
 
+    /**
+     * Método para crear los componentes de la interfaz.
+     */
     private void createUIComponents() {
-        // TODO: place custom component creation code here
-        panelcajero = new Conexion_base_de_datos.CustomPanel("./src/fondoadministrador.jpeg");
-        panel11 = new Conexion_base_de_datos.CustomPanel("./src/imagenes/descargar-removebg.png");
-        cerrar = new JButton();
-        minimizar = new JButton();
-        volverButton = new JButton();
-        comprarButton = new JButton();
-        mostrarButton = new JButton();
-        personalizeButton(volverButton);
-        personalizeButton(cerrar);
-        personalizeButton(minimizar);
-        metodobotones(comprarButton);
-        metodobotones(mostrarButton);
+        panelcajero = new Conexion_base_de_datos.CustomPanel("./src/fondoadministrador.jpeg"); // Panel principal
+        panel11 = new Conexion_base_de_datos.CustomPanel("./src/imagenes/descargar-removebg.png"); // Panel adicional
+        cerrar = new JButton(); // Botón de cerrar
+        minimizar = new JButton(); // Botón de minimizar
+        volverButton = new JButton(); // Botón para volver
+        comprarButton = new JButton(); // Botón para comprar
+        mostrarButton = new JButton(); // Botón para mostrar facturas
+        Conexion_base_de_datos.personalizeButton(volverButton); // Personaliza el botón para volver
+        Conexion_base_de_datos.personalizeButton(cerrar); // Personaliza el botón de cerrar
+        Conexion_base_de_datos.personalizeButton(minimizar); // Personaliza el botón de minimizar
+        Conexion_base_de_datos.metodobotones(comprarButton); // Personaliza el botón de comprar
+        Conexion_base_de_datos.metodobotones(mostrarButton); // Personaliza el botón de mostrar facturas
     }
-    public void ingresar(){
-        setVisible(true);
-        setSize(900,600);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+    /**
+     * Método para mostrar la ventana del menú de cajero.
+     */
+    public void ingresar() {
+        setVisible(true); // Hace visible la ventana
+        setSize(900, 600); // Establece el tamaño de la ventana
+        setLocationRelativeTo(null); // Centra la ventana en la pantalla
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Cierra la aplicación al cerrar la ventana
     }
-    private void personalizeButton(JButton button) {
-        button.setFocusPainted(false);
-        button.setBorderPainted(false);
-        button.setContentAreaFilled(false);
-        button.setFont(new Font("Arial", Font.BOLD, 16));
-        button.setForeground(Color.CYAN);
-        button.setBackground(Color.DARK_GRAY);
-        button.setPreferredSize(new Dimension(20, 20)); // Tamaño personalizado
-        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Cambiar el cursor
-    }
-    private void metodobotones(JButton button) {
-        button.setFont(new Font("Arial", Font.BOLD, 16));
-        button.setForeground(Color.white);
-        button.setBackground(new Color(122, 153, 227, 255));
-        button.setOpaque(true);
-        button.setFocusPainted(false);
-        button.setBorder(BorderFactory.createLineBorder(Color.black, 2));
-        button.setPreferredSize(new Dimension(120, 40));
-    }
+
+
+
 }
+

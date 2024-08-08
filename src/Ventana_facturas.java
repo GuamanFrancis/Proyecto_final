@@ -14,7 +14,11 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
-public class Ventana_facturas extends JFrame{
+/**
+ * Clase Ventana_facturas que representa la interfaz gráfica para manejar facturas.
+ * Extiende JFrame para crear una ventana donde se pueden mostrar, imprimir y gestionar facturas.
+ */
+public class Ventana_facturas extends JFrame {
     private JPanel panelfacturas;
     private JButton cerrar;
     private JButton minimizar;
@@ -26,37 +30,50 @@ public class Ventana_facturas extends JFrame{
     private JPanel panel1;
     private JScrollPane scrollPane1;
 
+    /**
+     * Constructor de la clase Ventana_facturas.
+     *
+     * @param idCajero El ID del cajero que está utilizando la ventana.
+     */
     public Ventana_facturas(int idCajero) {
         super("Ventana facturas");
         setContentPane(panelfacturas);
         setUndecorated(true);
+
         mostrarFacturasButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    cargarDatos();
+                    cargarDatos(); // Carga los datos de las facturas en la tabla
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
-
             }
         });
+
         cerrar.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {System.exit(0);}
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0); // Cierra la aplicación
+            }
         });
+
         minimizar.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {setState(Frame.ICONIFIED);}
+            public void actionPerformed(ActionEvent e) {
+                setState(Frame.ICONIFIED); // Minimiza la ventana
+            }
         });
+
         volverButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Ventana_menu_cajero menu = new Ventana_menu_cajero(idCajero);
-                menu.ingresar();
-                dispose();
+                menu.ingresar(); // Muestra el menú del cajero
+                dispose(); // Cierra la ventana actual
             }
         });
+
         imprimirButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -64,14 +81,17 @@ public class Ventana_facturas extends JFrame{
                 if (selectedRow >= 0) {
                     String ventaId = model1.getValueAt(selectedRow, 1).toString();
                     String rutaSalida = "Factura_" + ventaId + ".pdf";
-                    generarPDF(ventaId, rutaSalida);
+                    generarPDF(ventaId, rutaSalida); // Genera el PDF de la factura
                 } else {
                     JOptionPane.showMessageDialog(null, "Por favor, selecciona una fila de la tabla.");
                 }
-
             }
         });
     }
+
+    /**
+     * Método para crear los componentes de la interfaz.
+     */
     private void createUIComponents() {
         panelfacturas = new Conexion_base_de_datos.CustomPanel("./src/fondoadministrador.jpeg");
         panel1 = new Conexion_base_de_datos.CustomPanel("./src/imagenes/descargar-removebg.png");
@@ -85,35 +105,45 @@ public class Ventana_facturas extends JFrame{
         Conexion_base_de_datos.personalizeButton(volverButton);
         Conexion_base_de_datos.personalizeButton(cerrar);
         Conexion_base_de_datos.personalizeButton(minimizar);
+
         model1 = new DefaultTableModel();
-        model1.addColumn("ID Factura");model1.addColumn("ID Venta");model1.addColumn("ID Cliente ");model1.addColumn("Total");model1.addColumn("Fecha");
+        model1.addColumn("ID Factura");
+        model1.addColumn("ID Venta");
+        model1.addColumn("ID Cliente");
+        model1.addColumn("Total");
+        model1.addColumn("Fecha");
         table1 = new JTable();
         table1.setModel(model1);
         table1.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         table1.setShowGrid(true);
         table1.setGridColor(Color.GRAY);
-        table1 = new JTable(model1);
-        table1.setShowGrid(true);
-        table1.setGridColor(Color.GRAY);
         table1.getTableHeader().setReorderingAllowed(false);
-        add(table1);
+
         scrollPane1 = new JScrollPane(table1);
         scrollPane1.setPreferredSize(new Dimension(300, 400));
-
     }
-    public void ingresar(){
+
+    /**
+     * Método que muestra la ventana de facturas.
+     */
+    public void ingresar() {
         setVisible(true);
-        setSize(900,600);
+        setSize(900, 600);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
     }
-    private void cargarDatos()throws SQLException {
+
+    /**
+     * Método que carga los datos de las facturas desde la base de datos y los muestra en la tabla.
+     *
+     * @throws SQLException Si ocurre un error en la conexión a la base de datos.
+     */
+    private void cargarDatos() throws SQLException {
         Connection conexion = null;
-        Statement statement =null;
-        ResultSet resultSet =null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            model1.setRowCount(0);
+            model1.setRowCount(0); // Limpia el modelo de la tabla
             conexion = new Conexion_base_de_datos().conexion();
             statement = conexion.createStatement();
             resultSet = statement.executeQuery("SELECT * FROM Facturas");
@@ -128,28 +158,32 @@ public class Ventana_facturas extends JFrame{
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        }finally {
-            new Conexion_base_de_datos().cerrarRecursos(conexion,statement,resultSet);
+        } finally {
+            new Conexion_base_de_datos().cerrarRecursos(conexion, statement, resultSet); // Cierra los recursos
         }
     }
+
+    /**
+     * Método que genera un archivo PDF para una factura específica.
+     *
+     * @param ventaId    El ID de la venta para la cual se genera el PDF.
+     * @param rutaSalida La ruta de salida donde se guardará el PDF.
+     */
     private void generarPDF(String ventaId, String rutaSalida) {
         Connection conexion = null;
-        Statement statement =null;
-        ResultSet facturaResultSet =null;
-        ResultSet detallesResultSet =null;
+        Statement statement = null;
+        ResultSet facturaResultSet = null;
+        ResultSet detallesResultSet = null;
         try (PDDocument document = new PDDocument()) {
             PDPage page = new PDPage();
             document.addPage(page);
             PDPageContentStream contentStream = new PDPageContentStream(document, page);
 
-
             PDFont boldFont = PDType1Font.HELVETICA_BOLD;
             PDFont regularFont = PDType1Font.HELVETICA;
 
-
             PDImageXObject logo = PDImageXObject.createFromFile("./src/imagenes/logoa-fotor-bg-remover-2024073116374.png", document);
             contentStream.drawImage(logo, 80, 730, 100, 50);
-
 
             contentStream.beginText();
             contentStream.setFont(boldFont, 16);
@@ -160,7 +194,6 @@ public class Ventana_facturas extends JFrame{
             contentStream.lineTo(550, 740);
             contentStream.stroke();
 
-
             contentStream.beginText();
             contentStream.setFont(boldFont, 12);
             contentStream.newLineAtOffset(50, 710);
@@ -169,14 +202,13 @@ public class Ventana_facturas extends JFrame{
             contentStream.setFont(regularFont, 12);
             contentStream.showText("RUC: (0102030456123)");
             contentStream.newLineAtOffset(0, -15);
-            contentStream.showText("Dirección: San Juan de Calderon ");
+            contentStream.showText("Dirección: San Juan de Calderon");
             contentStream.newLineAtOffset(0, -15);
             contentStream.showText("Teléfono / email: 0986263165");
             contentStream.endText();
 
-            conexion= new Conexion_base_de_datos().conexion();
-             statement = conexion.createStatement();
-
+            conexion = new Conexion_base_de_datos().conexion();
+            statement = conexion.createStatement();
 
             String facturasql = "SELECT f.id AS factura_id, f.fecha_emision, f.total AS total_factura, " +
                     "c.nombre AS cliente_nombre, c.apellido AS cliente_apellido, c.correo AS cliente_correo, " +
@@ -185,7 +217,7 @@ public class Ventana_facturas extends JFrame{
                     "JOIN Clientes c ON f.cliente_id = c.id " +
                     "WHERE f.venta_id = " + ventaId;
 
-             facturaResultSet = statement.executeQuery(facturasql);
+            facturaResultSet = statement.executeQuery(facturasql);
             System.out.println("Consulta para ventaId: " + ventaId);
 
             if (facturaResultSet.next()) {
@@ -194,7 +226,6 @@ public class Ventana_facturas extends JFrame{
                 contentStream.newLineAtOffset(50, 640);
                 contentStream.showText("Datos del cliente:");
                 contentStream.endText();
-
 
                 contentStream.setNonStrokingColor(0, 0, 0);
                 contentStream.beginText();
@@ -208,7 +239,6 @@ public class Ventana_facturas extends JFrame{
                 contentStream.newLineAtOffset(0, -15);
                 contentStream.showText("Dirección: " + facturaResultSet.getString("cliente_direccion"));
                 contentStream.endText();
-
 
                 contentStream.beginText();
                 contentStream.setFont(regularFont, 12);
@@ -229,8 +259,9 @@ public class Ventana_facturas extends JFrame{
                     "FROM Detalles_Ventas dv " +
                     "JOIN Productos p ON dv.producto_id = p.id " +
                     "WHERE dv.venta_id = " + ventaId;
+
             try {
-                 detallesResultSet = statement.executeQuery(detallessql);
+                detallesResultSet = statement.executeQuery(detallessql);
 
                 contentStream.moveTo(50, 530);
                 contentStream.lineTo(550, 530);
@@ -252,7 +283,6 @@ public class Ventana_facturas extends JFrame{
                 contentStream.lineTo(550, 510);
                 contentStream.stroke();
 
-
                 int yOffset = 450;
                 while (detallesResultSet.next()) {
                     if (yOffset < 50) {
@@ -260,7 +290,7 @@ public class Ventana_facturas extends JFrame{
                         page = new PDPage();
                         document.addPage(page);
                         contentStream = new PDPageContentStream(document, page);
-                        yOffset = 750;
+                        yOffset = 750; // Reinicia el offset para una nueva página
                     }
                     String descripcion = detallesResultSet.getString("producto_nombre") + " - " + detallesResultSet.getString("producto_descripcion");
                     List<String> descripcionLines = splitTextIntoLines(descripcion, 50);
@@ -271,7 +301,7 @@ public class Ventana_facturas extends JFrame{
                         contentStream.newLineAtOffset(40, yOffset);
                         contentStream.showText(line);
                         contentStream.endText();
-                        yOffset -= 15;
+                        yOffset -= 15; // Desplaza hacia abajo el offset para la siguiente línea
                     }
 
                     contentStream.beginText();
@@ -284,29 +314,34 @@ public class Ventana_facturas extends JFrame{
                     contentStream.showText(detallesResultSet.getString("subtotal") + " $");
                     contentStream.endText();
 
-                    yOffset -= 20;
+                    yOffset -= 20; // Espacio entre filas
                 }
 
                 contentStream.close();
                 String desktop = System.getProperty("user.home") + "/Desktop/";
-                 rutaSalida = desktop + "Factura_" + ventaId + ".pdf";
+                rutaSalida = desktop + "Factura_" + ventaId + ".pdf"; // Guarda el PDF en el escritorio
                 document.save(rutaSalida);
-                JOptionPane.showMessageDialog(null, "Se creó el archivo 'factura_" + ventaId + "' en la carpeta Desktop");
-
-
-            }catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, "Se creó el archivo 'Factura_" + ventaId + "' en la carpeta Desktop");
+            } catch (SQLException ex) {
                 ex.printStackTrace();
-            }finally {
-                new Conexion_base_de_datos().cerrarRecursos(null,null,detallesResultSet);
+            } finally {
+                new Conexion_base_de_datos().cerrarRecursos(null, null, detallesResultSet); // Cierra los recursos
             }
-
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error al generar el PDF: " + e.getMessage());
-        }finally {
-            new Conexion_base_de_datos().cerrarRecursos(conexion,statement,facturaResultSet);
+        } finally {
+            new Conexion_base_de_datos().cerrarRecursos(conexion, statement, facturaResultSet); // Cierra los recursos
         }
     }
+
+    /**
+     * Método que divide un texto en líneas según una longitud máxima.
+     *
+     * @param text      El texto a dividir.
+     * @param maxLength La longitud máxima de cada línea.
+     * @return Una lista de líneas de texto.
+     */
     private List<String> splitTextIntoLines(String text, int maxLength) {
         List<String> lines = new ArrayList<>();
         String[] words = text.split(" ");
@@ -329,6 +364,5 @@ public class Ventana_facturas extends JFrame{
 
         return lines;
     }
-
-
 }
+
